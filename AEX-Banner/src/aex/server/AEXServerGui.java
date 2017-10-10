@@ -33,7 +33,7 @@ public class AEXServerGui extends Application
     private static final int portNumber = 1098;
     private Registry registry = null;
     private String bindingName = "AEXBanner";
-    private EffectenBeurs effectenBeurs = null;
+    private MockEffectenBeurs effectenBeurs = null;
     
     @Override
     public void start(Stage primaryStage)
@@ -61,7 +61,7 @@ public class AEXServerGui extends Application
         
         try
         {
-            effectenBeurs = new EffectenBeurs();
+            effectenBeurs = new MockEffectenBeurs();
         }
         catch (RemoteException ex)
         {

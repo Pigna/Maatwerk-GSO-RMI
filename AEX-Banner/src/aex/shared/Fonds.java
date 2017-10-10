@@ -5,7 +5,6 @@
  */
 package aex.shared;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -14,7 +13,7 @@ import java.text.DecimalFormat;
  *
  * @author myron
  */
-public class Fonds implements IFonds, Serializable {
+public class Fonds implements IFonds {
     String naam;
     Double koers;
 

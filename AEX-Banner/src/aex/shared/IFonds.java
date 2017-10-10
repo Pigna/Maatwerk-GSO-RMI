@@ -5,11 +5,13 @@
  */
 package aex.shared;
 
+import java.io.Serializable;
+
 /**
  *
  * @author myron
  */
-public interface IFonds {
+public interface IFonds extends Serializable{
     public String getNaam();
     public double getKoers();
     public void setKoers(Double nieuweKoers);
