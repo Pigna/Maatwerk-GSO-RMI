@@ -1,5 +1,6 @@
 package aex.client;
 
+import java.rmi.RemoteException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,7 +26,15 @@ public class AEXBanner extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        controller = new BannerController(this);
+        try
+        {
+           controller = new BannerController(this);
+        }
+        catch (RemoteException ex)
+        {
+            System.out.println("Client: Cannot create bannerController");
+            System.out.println("Client: RemoteException: " + ex.getMessage());
+        }
 
         Font font = new Font("Arial", HEIGHT);
         text = new Text();
@@ -53,7 +62,6 @@ public class AEXBanner extends Application {
                 if (lag >= NANO_TICKS)
                 {
                     // calculate new location of text
-                    // TODO
                     textPosition-=5;
                     //If text outside screen
                     if(textPosition < -textLength)

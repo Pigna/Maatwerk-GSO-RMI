@@ -5,6 +5,8 @@
  */
 package aex.server;
 
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.RemotePublisher;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -32,8 +34,10 @@ public class AEXServerGui extends Application
     //Port
     private static final int portNumber = 1098;
     private Registry registry = null;
-    private String bindingName = "AEXBanner";
+    private static final String bindingName = "AEXBanner";
+    private static final String propertyName = "EffectenBeurs";
     private MockEffectenBeurs effectenBeurs = null;
+    private IRemotePublisherForDomain remotePublisherForDomain;
     
     @Override
     public void start(Stage primaryStage)
@@ -61,7 +65,8 @@ public class AEXServerGui extends Application
         
         try
         {
-            effectenBeurs = new MockEffectenBeurs();
+            effectenBeurs = new MockEffectenBeurs(this);
+            ((MockEffectenBeurs)effectenBeurs).makeTimer();
         }
         catch (RemoteException ex)
         {
@@ -69,7 +74,16 @@ public class AEXServerGui extends Application
             System.out.println("Server: RemoteException: " + ex.getMessage());
             effectenBeurs = null;
         }
-        
+        //Create remote publisher
+        try
+        {
+            remotePublisherForDomain = new RemotePublisher();
+            remotePublisherForDomain.registerProperty(propertyName);
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Server: Cannot create remotePublisherForDomain " + ex.getMessage());
+        }
         // Create registry at port number
         try
         {
@@ -86,7 +100,14 @@ public class AEXServerGui extends Application
         // Bind AEXBanner using registry
         try
         {
-            registry.rebind(bindingName, effectenBeurs);
+            if(registry != null)
+            {
+                registry.rebind(bindingName, remotePublisherForDomain);
+            }
+            else
+            {
+                throw new RemoteException();
+            }
         }
         catch (RemoteException ex)
         {
@@ -136,6 +157,11 @@ public class AEXServerGui extends Application
     public static void main(String[] args) {
         printIPAddresses();
         launch(args);
+    }
+
+    public IRemotePublisherForDomain getRemotePublisherForDomain()
+    {
+        return remotePublisherForDomain;
     }
     
 }
